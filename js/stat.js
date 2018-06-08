@@ -16,26 +16,6 @@ var renderCloud = function (ctx, x, y, color) {
   ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
 };
 
-// Выравнивает внутренний контейнер относительно внешнего. Принимает размер внешнего контейнера, отступ,
-// размер внутреннего контейнера. Размеры должны быть соосны: оба по горизонтали или оба по вертикали.
-// Предпологал выровнять по горизонтали гистограмму относительно облака.
-// var getAlignment = function (externalContainer, spacing, internalContainer) {
-//   return (externalContainer - 2 * spacing - internalContainer) / 2;
-// };
-
-// Определяет ширину гистограммы. Принимает массив.
-// var getHistogrammWidth = function (arr) {
-//   if (arr) {
-//     return BAR_WIDTH + (GAP + BAR_WIDTH) * (arr.length - 1);
-//   }
-// };
-
-// Это значение пробовал подставить вместо координаты по X в ctx.fillText и ctx.fillRect
-// // getAlignment(CLOUD_WIDTH, GAP, getHistorgammWidth(names))
-// или так
-// CLOUD_X + getAlignment(CLOUD_WIDTH, GAP, getHistorgammWidth(names))
-// пока не разобрался.
-
 // Определяет максимальное значение в массиве. Принимает массив данных.
 var getMaxElement = function (arr) {
   if (arr) {
@@ -47,7 +27,7 @@ var getMaxElement = function (arr) {
     }
     return maxElement;
   }
-  // Ошибку тревис выдаёт. if (arr) - если массив есть, то выполнить код, а если нет, что я должен вернуть?
+  return arr;
 };
 
 // При выигрыше появляется облако со статистикой.
@@ -62,20 +42,10 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillText('Список результатов:', 230, 50);
 
   var maxTime = getMaxElement(times);
-
-  // var randomColor = function () {
-  //   return hsl(240, Math.random() * 100, 50%); Тут надо указывать '* 100%'?
-  // };
+  var saturation = Math.random() * 100;
 
   for (var i = 0; i < times.length; i++) {
-    if (i < 1) {
-      ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-    } else {
-      ctx.fillStyle = 'hsl(240, 100%, 50%)';
-    // ctx.fillStyle = randomColor();
-    // Не понял, как передать не строку в свойство fillStyle. Надо сгенерировать случайный цвет,
-    // перевести его в строку методом toString() и потом уже подставлять?
-    }
+    ctx.fillStyle = (i < 1) ? 'rgba(255, 0, 0, 1)' : 'hsl(240, ' + saturation + '%, 50%)';
     ctx.fillText(Math.round(times[i]), CLOUD_X + GAP + (BAR_WIDTH + GAP) * i, HISTOGRAMM_Y_0 - HISTOGRAMM_MAX_HEIGHT - FONT_GAP);
     ctx.fillRect(CLOUD_X + GAP + (BAR_WIDTH + GAP) * i, HISTOGRAMM_Y_0, BAR_WIDTH, ((HISTOGRAMM_MAX_HEIGHT * times[i]) / maxTime) * -1);
   }

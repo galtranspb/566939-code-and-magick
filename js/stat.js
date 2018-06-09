@@ -18,16 +18,16 @@ var renderCloud = function (ctx, x, y, color) {
 
 // Определяет максимальное значение в массиве. Принимает массив данных.
 var getMaxElement = function (arr) {
-  if (arr) {
-    var maxElement = arr[0];
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i] > maxElement) {
-        maxElement = arr[i];
-      }
-    }
-    return maxElement;
+  if (!arr) {
+    return arr;
   }
-  return arr;
+  var maxElement = arr[0];
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] > maxElement) {
+      maxElement = arr[i];
+    }
+  }
+  return maxElement;
 };
 
 // При выигрыше появляется облако со статистикой.
@@ -44,14 +44,25 @@ window.renderStatistics = function (ctx, names, times) {
   var maxTime = getMaxElement(times);
   var saturation = Math.random() * 100;
 
-  for (var i = 0; i < times.length; i++) {
-    ctx.fillStyle = (i < 1) ? 'rgba(255, 0, 0, 1)' : 'hsl(240, ' + saturation + '%, 50%)';
-    ctx.fillText(Math.round(times[i]), CLOUD_X + GAP + (BAR_WIDTH + GAP) * i, HISTOGRAMM_Y_0 - HISTOGRAMM_MAX_HEIGHT - FONT_GAP);
-    ctx.fillRect(CLOUD_X + GAP + (BAR_WIDTH + GAP) * i, HISTOGRAMM_Y_0, BAR_WIDTH, ((HISTOGRAMM_MAX_HEIGHT * times[i]) / maxTime) * -1);
+  // Определяет начальнуюю координату по х столбиков гистограммыб в зависимости от номера элемента массива.
+  // Принимает порядковый номер элемента массива.
+  var initialCoordinateX = function (index) {
+    return CLOUD_X + GAP + (BAR_WIDTH + GAP) * index;
+  };
+
+  if (times.length !== names.length) {
+    if (names.length > times.length) {
+      names.length = times.length;
+    } else {
+      times.length = names.length;
+    }
   }
 
-  for (i = 0; i < names.length; i++) {
+  for (var i = 0; i < times.length; i++) {
+    ctx.fillStyle = (i < 1) ? 'rgba(255, 0, 0, 1)' : 'hsl(240, ' + saturation + '%, 50%)';
+    ctx.fillText(Math.round(times[i]), initialCoordinateX(i), HISTOGRAMM_Y_0 - HISTOGRAMM_MAX_HEIGHT - FONT_GAP);
+    ctx.fillRect(initialCoordinateX(i), HISTOGRAMM_Y_0, BAR_WIDTH, ((HISTOGRAMM_MAX_HEIGHT * times[i]) / maxTime) * -1);
     ctx.textBaseline = 'hanging';
-    ctx.fillText(names[i], CLOUD_X + GAP + (BAR_WIDTH + GAP) * i, HISTOGRAMM_Y_0 + FONT_GAP);
+    ctx.fillText(names[i], initialCoordinateX(i), HISTOGRAMM_Y_0 + FONT_GAP);
   }
 };

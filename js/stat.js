@@ -42,7 +42,11 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillText('Список результатов:', 230, 50);
 
   var maxTime = getMaxElement(times);
-  var saturation = Math.random() * 100;
+
+  // Генирирует случайное чилсло от 0 до 90
+  var saturation = function () {
+    return Math.random() * 100;
+  };
 
   // Определяет начальнуюю координату по х столбиков гистограммыб в зависимости от номера элемента массива.
   // Принимает порядковый номер элемента массива.
@@ -59,7 +63,7 @@ window.renderStatistics = function (ctx, names, times) {
   }
 
   for (var i = 0; i < times.length; i++) {
-    ctx.fillStyle = (i < 1) ? 'rgba(255, 0, 0, 1)' : 'hsl(240, ' + saturation + '%, 50%)';
+    ctx.fillStyle = (names[i] === 'Вы') ? 'rgba(255, 0, 0, 1)' : 'hsl(240, ' + saturation() + '%, 50%)';
     ctx.fillText(Math.round(times[i]), initialCoordinateX(i), HISTOGRAMM_Y_0 - HISTOGRAMM_MAX_HEIGHT - FONT_GAP);
     ctx.fillRect(initialCoordinateX(i), HISTOGRAMM_Y_0, BAR_WIDTH, ((HISTOGRAMM_MAX_HEIGHT * times[i]) / maxTime) * -1);
     ctx.textBaseline = 'hanging';

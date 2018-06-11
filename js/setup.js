@@ -16,15 +16,14 @@ var getRandomIntByRange = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-// Возвращает случайное имя. Выборка выриантов берётся из массивов WIZARD_NAMES и WIZARD_LAST_NAMES.
-var createWizardName = function () {
-  return WIZARD_NAMES[getRandomIntByRange(0, WIZARD_NAMES.length)] +
-  ' ' + WIZARD_LAST_NAMES[getRandomIntByRange(0, WIZARD_LAST_NAMES.length)];
-};
-
 // Возвращает случайный элемент массива. Выборка берётся из входящего массива arr.
 var getRandomArrayItem = function (arr) {
   return arr[getRandomIntByRange(0, arr.length)];
+};
+
+// Возвращает случайное имя. Выборка выриантов берётся из массивов WIZARD_NAMES и WIZARD_LAST_NAMES.
+var createWizardName = function () {
+  return getRandomArrayItem(WIZARD_NAMES) + ' ' + getRandomArrayItem(WIZARD_LAST_NAMES);
 };
 
 // Возварщает массив объектов. Принимает количество объектов.

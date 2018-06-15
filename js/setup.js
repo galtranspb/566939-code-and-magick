@@ -30,17 +30,14 @@ var createWizardName = function () {
 var createArreyOfObject = function (numberOfObject) {
   var array = [];
   for (var i = 0; i < numberOfObject; i++) {
-    var object = {
+    array.push({
       name: createWizardName(),
       coatColor: getRandomArrayItem(COAT_COLORS),
       eyesColor: getRandomArrayItem(EYES_COLORS)
-    };
-    array.push(object);
+    });
   }
   return array;
 };
-
-var wizards = createArreyOfObject(NUMBER_OF_WIZARDS);
 
 // Принимает массив объектов wizard.
 // Создает копию разметки из шаблона similarWizardTemplate. Определяет текстовое содержимое и
@@ -54,6 +51,8 @@ var renderWizard = function (wizard) {
 
   return wizardElement;
 };
+
+var wizards = createArreyOfObject(NUMBER_OF_WIZARDS);
 
 var fragment = document.createDocumentFragment();
 for (var i = 0; i < wizards.length; i++) {

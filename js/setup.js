@@ -6,10 +6,16 @@ var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161
   'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var NUMBER_OF_WIZARDS = 4;
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 var setup = document.querySelector('.setup');
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = document.querySelector('.setup-close');
+// var setupUserName = document.querySelector('.setup-user-name');
 
 // Возвращает случайное целое число из диапозона min (включительно) и max (не включая max);
 var getRandomIntByRange = function (min, max) {
@@ -52,6 +58,23 @@ var renderWizard = function (wizard) {
   return wizardElement;
 };
 
+var openPopup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var closePopup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
 var wizards = createArreyOfObject(NUMBER_OF_WIZARDS);
 
 var fragment = document.createDocumentFragment();
@@ -60,7 +83,24 @@ for (var i = 0; i < wizards.length; i++) {
 }
 similarListElement.appendChild(fragment);
 
-if (setup.classList.contains('hidden')) {
-  setup.classList.remove('hidden');
-}
-setup.querySelector('.setup-similar').classList.remove('hidden');
+// setup.querySelector('.setup-similar').classList.remove('hidden');
+
+setupOpen.addEventListener('click', function () {
+  openPopup();
+});
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openPopup();
+  }
+});
+
+setupClose.addEventListener('click', function () {
+  closePopup();
+});
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
+});

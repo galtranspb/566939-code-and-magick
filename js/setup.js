@@ -13,12 +13,9 @@ var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 var setup = document.querySelector('.setup');
 var similarListElement = document.querySelector('.setup-similar-list');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
-
 var setupOpen = document.querySelector('.setup-open');
 var setupClose = document.querySelector('.setup-close');
-
 var setupUserName = document.querySelector('.setup-user-name');
-
 var coatColor = setup.querySelector('.wizard-coat');
 var eyesColor = setup.querySelector('.wizard-eyes');
 var fireballColor = setup.querySelector('.setup-fireball');
@@ -73,7 +70,6 @@ var renderWizard = function (wizard) {
 var openPopup = function () {
   setup.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
-  // stopPropagation на клавишу esc?
 };
 
 // Добаляет класс hidden объекту setup и убирает обработчик события keydown у объекта document.
@@ -82,30 +78,12 @@ var closePopup = function () {
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
-
-
-
-
-
-var aaa = false;
-
-setupUserName.addEventListener('focus', function (evt) {
-  aaa = true;
-});
-
 // Принимает событие event. Если нажата клавиша ESC, то запускает функцию closePopup.
 var onPopupEscPress = function (evt) {
-  if ((evt.keyCode === ESC_KEYCODE) && !aaa) {
-  // if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === ESC_KEYCODE && document.activeElement !== setupUserName) {
     closePopup();
   }
 };
-
-
-
-
-
-
 
 // Принимает объект 1, массив, и объект 2.
 // Устанваливает объекту 1 цвет заливки случайным образом из массива arr и передаёт это значение в свойсвто value объекта 2.

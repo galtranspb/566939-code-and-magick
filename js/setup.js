@@ -17,7 +17,7 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template').c
 var setupOpen = document.querySelector('.setup-open');
 var setupClose = document.querySelector('.setup-close');
 
-// var setupUserName = document.querySelector('.setup-user-name');
+var setupUserName = document.querySelector('.setup-user-name');
 
 var coatColor = setup.querySelector('.wizard-coat');
 var eyesColor = setup.querySelector('.wizard-eyes');
@@ -82,13 +82,30 @@ var closePopup = function () {
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
+
+
+
+
+
+var aaa = false;
+
+setupUserName.addEventListener('focus', function (evt) {
+  aaa = true;
+});
+
 // Принимает событие event. Если нажата клавиша ESC, то запускает функцию closePopup.
 var onPopupEscPress = function (evt) {
-  // if (evt.keyCode === ESC_KEYCODE && !setupUserName.focused - поле поиска не в фокусе ) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if ((evt.keyCode === ESC_KEYCODE) && !aaa) {
+  // if (evt.keyCode === ESC_KEYCODE) {
     closePopup();
   }
 };
+
+
+
+
+
+
 
 // Принимает объект 1, массив, и объект 2.
 // Устанваливает объекту 1 цвет заливки случайным образом из массива arr и передаёт это значение в свойсвто value объекта 2.
@@ -103,8 +120,8 @@ var toAssignFireballColor = function (arr) {
   inputFireballColor.backgroundColor = fireballColor.style.backgroundColor;
 };
 
-// Обработчик событий клика на форме .Setup-Wizard-Form. Запускает функции из предложеных вариантов, в зависимости от того,
-// на каком элементе произошёл клик.
+// Обработчик событий клика на форме .Setup-Wizard-Form. Запускает функции из предложеных вариантов, в зависимости
+// от того, на каком элементе произошёл клик.
 var onSetupWizardFormClick = function (evt) {
   switch (evt.target) {
     case coatColor: toAssignColor(coatColor, COAT_COLORS, inputCoatColor);

@@ -79,8 +79,6 @@ var renderWizard = function (wizard) {
 var openPopup = function () {
   setup.classList.remove('hidden');
   setup.querySelector('.setup-similar').classList.remove('hidden');
-  setup.style.top = '';
-  setup.style.left = '';
   dialog.style.zIndex = 3;
   document.addEventListener('keydown', onPopupEscPress);
 };
@@ -90,6 +88,8 @@ var closePopup = function () {
   setup.classList.add('hidden');
   setup.querySelector('.setup-similar').classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
+  setup.style.top = '';
+  setup.style.left = '';
 };
 
 // Принимает событие event. Если нажата клавиша ESC, то запускает функцию closePopup.

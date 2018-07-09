@@ -1,7 +1,7 @@
 # Учебный проект «Код и Магия» [![Build status][travis-image]][travis-url]
 
 * Студент: [Анатолий Соколов](https://up.htmlacademy.ru/javascript/14/user/566939).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Смирнов](https://up.htmlacademy.ru/javascript/14/user/516117).
 
 ---
 

@@ -23,7 +23,15 @@ var inputCoatColor = setup.querySelector('input[name="coat-color"]');
 var inputEyesColor = setup.querySelector('input[name="eyes-color"]');
 var inputFireballColor = setup.querySelector('input[name="fireball-color"]');
 var setupWizardForm = document.querySelector('.setup-wizard-form');
+
 var dialog = setup.querySelector('.upload');
+var startCoords = {
+  x: setup.offsetTop,
+  y: setup.offsetLeft
+};
+var dragged = false;
+
+// *****************************************Определения функций******************************************
 
 // Возвращает случайное целое число из диапозона min (включительно) и max (не включая max);
 var getRandomIntByRange = function (min, max) {
@@ -113,6 +121,57 @@ var onSetupWizardFormClick = function (evt) {
   }
 };
 
+// *****************************задание 5*******************************************
+
+// Принимает событие mousemove.
+// Определяет перемещение мыши по Х/У и устанавливает их в свойство стиля соответственно left/top элемента setup.
+var onMouseMove = function (evt) {
+  evt.preventDefault();
+  dragged = true;
+
+  var shift = {
+    x: startCoords.x - evt.clientX,
+    y: startCoords.y - evt.clientY
+  };
+  setup.style.top = (setup.offsetTop - shift.y) + 'px';
+  setup.style.left = (setup.offsetLeft - shift.x) + 'px';
+};
+
+// Обработчик события клика по элементу upload
+// Отменяет действие по умолчанию - открытие окна загрузки файла. Убирает обработчик клика по элементу upload.
+var onUploadClick = function (evt) {
+  evt.preventDefault();
+  dialog.removeEventListener('click', onUploadClick);
+};
+
+// Обработчик события mouseup. Отменяет действие по умолчанию. Снимает обработчики mousemove, mouseup.
+// Если есть перемещение курсора, то вешает обработчик клика onUploadClick на элемент setup.
+var onMouseUp = function (evt) {
+  evt.preventDefault();
+  document.removeEventListener('mousemove', onMouseMove);
+  document.removeEventListener('mouseup', onMouseUp);
+
+  if (dragged) {
+    dialog.addEventListener('click', onUploadClick);
+  }
+};
+
+// Обработчик события mousedown.
+// Отменяет действие по умолчанию, указывает стартовые координаты, добалвяет на document обработчики onMouseMove и onMouseUp.
+var onMouseDown = function (evt) {
+  evt.preventDefault();
+
+  startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+};
+
+// ******************************Объявления функций**************************************
+
 var wizards = createArreyOfObject(NUMBER_OF_WIZARDS);
 
 var fragment = document.createDocumentFragment();
@@ -143,44 +202,4 @@ setupClose.addEventListener('keydown', function (evt) {
 
 setupWizardForm.addEventListener('click', onSetupWizardFormClick);
 
-// Обработчик событий 'mousedown', 'mousemove', 'mouseup' на элементе dialod(.'upload')
-dialog.addEventListener('mousedown', function (evt) {
-  evt.preventDefault();
-
-  var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
-
-  var dragged = false;
-
-  var onMouseMove = function (moveEvt) {
-    moveEvt.preventDefault();
-    dragged = true;
-
-    var shift = {
-      x: startCoords.x - moveEvt.clientX,
-      y: startCoords.y - moveEvt.clientY
-    };
-    setup.style.top = (setup.offsetTop - shift.y) + 'px';
-    setup.style.left = (setup.offsetLeft - shift.x) + 'px';
-  };
-
-  var onMouseUp = function (upEvt) {
-    upEvt.preventDefault();
-
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
-
-    if (dragged) {
-      var onClickPreventDefault = function (clickEvt) {
-        clickEvt.preventDefault();
-        dialog.removeEventListener('click', onClickPreventDefault);
-      };
-      dialog.addEventListener('click', onClickPreventDefault);
-    }
-  };
-
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
-});
+dialog.addEventListener('mousedown', onMouseDown);

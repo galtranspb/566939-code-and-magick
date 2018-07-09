@@ -23,7 +23,7 @@ var inputCoatColor = setup.querySelector('input[name="coat-color"]');
 var inputEyesColor = setup.querySelector('input[name="eyes-color"]');
 var inputFireballColor = setup.querySelector('input[name="fireball-color"]');
 var setupWizardForm = document.querySelector('.setup-wizard-form');
-
+var dialog = setup.querySelector('.upload');
 
 // Возвращает случайное целое число из диапозона min (включительно) и max (не включая max);
 var getRandomIntByRange = function (min, max) {
@@ -69,12 +69,14 @@ var renderWizard = function (wizard) {
 // Убирает класс hidden у объекта setup и добавляет обработчик собития keydown на объект документ.
 var openPopup = function () {
   setup.classList.remove('hidden');
+  setup.querySelector('.setup-similar').classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
 };
 
 // Добаляет класс hidden объекту setup и убирает обработчик события keydown у объекта document.
 var closePopup = function () {
   setup.classList.add('hidden');
+  setup.querySelector('.setup-similar').classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
@@ -119,8 +121,6 @@ for (var i = 0; i < wizards.length; i++) {
 }
 similarListElement.appendChild(fragment);
 
-// setup.querySelector('.setup-similar').classList.remove('hidden');
-
 setupOpen.addEventListener('click', function () {
   openPopup();
 });
@@ -142,3 +142,45 @@ setupClose.addEventListener('keydown', function (evt) {
 });
 
 setupWizardForm.addEventListener('click', onSetupWizardFormClick);
+
+// Обработчик событий 'mousedown', 'mousemove', 'mouseup' на элементе dialod(.'upload')
+dialog.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var dragged = false;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+    setup.style.top = (setup.offsetTop - shift.y) + 'px';
+    setup.style.left = (setup.offsetLeft - shift.x) + 'px';
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (dragged) {
+      var onClickPreventDefault = function (clickEvt) {
+        clickEvt.preventDefault();
+        dialog.removeEventListener('click', onClickPreventDefault);
+      };
+      dialog.addEventListener('click', onClickPreventDefault);
+    }
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});

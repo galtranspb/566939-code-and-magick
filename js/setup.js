@@ -24,7 +24,8 @@ var inputEyesColor = setup.querySelector('input[name="eyes-color"]');
 var inputFireballColor = setup.querySelector('input[name="fireball-color"]');
 var setupWizardForm = document.querySelector('.setup-wizard-form');
 
-var dialog = setup.querySelector('.upload');
+// var dialog = setup.querySelector('.upload');
+var dialog = setup.querySelector('.setup-user-pic');
 var startCoords = {
   x: setup.offsetTop,
   y: setup.offsetLeft
@@ -78,6 +79,9 @@ var renderWizard = function (wizard) {
 var openPopup = function () {
   setup.classList.remove('hidden');
   setup.querySelector('.setup-similar').classList.remove('hidden');
+  setup.style.top = '';
+  setup.style.left = '';
+  dialog.style.zIndex = 3;
   document.addEventListener('keydown', onPopupEscPress);
 };
 

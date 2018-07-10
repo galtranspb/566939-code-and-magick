@@ -129,7 +129,7 @@ var onSetupWizardFormClick = function (evt) {
 
 // Принимает событие mousemove.
 // Определяет перемещение мыши по Х/У и устанавливает их в свойство стиля соответственно left/top элемента setup.
-var onMouseMove = function (evt) {
+var onDocumentMousemove = function (evt) {
   evt.preventDefault();
   dragged = true;
 
@@ -137,32 +137,38 @@ var onMouseMove = function (evt) {
     x: startCoords.x - evt.clientX,
     y: startCoords.y - evt.clientY
   };
+
+  startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
   setup.style.top = (setup.offsetTop - shift.y) + 'px';
   setup.style.left = (setup.offsetLeft - shift.x) + 'px';
 };
 
-// Обработчик события клика по элементу upload
-// Отменяет действие по умолчанию - открытие окна загрузки файла. Убирает обработчик клика по элементу upload.
-var onUploadClick = function (evt) {
+// Обработчик события клика по элементу .setup-user-pic
+// Отменяет действие по умолчанию - открытие окна загрузки файла. Убирает обработчик клика по элементу dialog.
+var onSetupUserPicClick = function (evt) {
   evt.preventDefault();
-  dialog.removeEventListener('click', onUploadClick);
+  dialog.removeEventListener('click', onSetupUserPicClick);
 };
 
 // Обработчик события mouseup. Отменяет действие по умолчанию. Снимает обработчики mousemove, mouseup.
-// Если есть перемещение курсора, то вешает обработчик клика onUploadClick на элемент setup.
-var onMouseUp = function (evt) {
+// Если есть перемещение курсора, то вешает обработчик клика onSetupUserPicClick на элемент dialog.
+var onDocumentMouseup = function (evt) {
   evt.preventDefault();
-  document.removeEventListener('mousemove', onMouseMove);
-  document.removeEventListener('mouseup', onMouseUp);
+  document.removeEventListener('mousemove', onDocumentMousemove);
+  document.removeEventListener('mouseup', onDocumentMouseup);
 
   if (dragged) {
-    dialog.addEventListener('click', onUploadClick);
+    dialog.addEventListener('click', onSetupUserPicClick);
   }
 };
 
 // Обработчик события mousedown.
 // Отменяет действие по умолчанию, указывает стартовые координаты, добалвяет на document обработчики onMouseMove и onMouseUp.
-var onMouseDown = function (evt) {
+var onDialogMousedown = function (evt) {
   evt.preventDefault();
 
   startCoords = {
@@ -170,8 +176,8 @@ var onMouseDown = function (evt) {
     y: evt.clientY
   };
 
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
+  document.addEventListener('mousemove', onDocumentMousemove);
+  document.addEventListener('mouseup', onDocumentMouseup);
 };
 
 // ******************************Объявления функций**************************************
@@ -206,4 +212,4 @@ setupClose.addEventListener('keydown', function (evt) {
 
 setupWizardForm.addEventListener('click', onSetupWizardFormClick);
 
-dialog.addEventListener('mousedown', onMouseDown);
+dialog.addEventListener('mousedown', onDialogMousedown);

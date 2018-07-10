@@ -120,13 +120,6 @@ var onSetupWizardFormClick = function (evt) {
 };
 
 // *****************************задание 5*******************************************
-
-
-
-
-
-
-
 // Обработчик события mousedown.
 // Отменяет действие по умолчанию, указывает стартовые координаты, добалвяет на document обработчики onMouseMove и onMouseUp.
 var onDialogMousedown = function (evt) {
@@ -140,18 +133,18 @@ var onDialogMousedown = function (evt) {
 
   // Принимает событие mousemove.
   // Определяет перемещение мыши по Х/У и устанавливает их в свойство стиля соответственно left/top элемента setup.
-  var onDocumentMousemove = function (evt) {
-    evt.preventDefault();
+  var onDocumentMousemove = function (moveEvt) {
+    moveEvt.preventDefault();
     dragged = true;
 
     var shift = {
-      x: startCoords.x - evt.clientX,
-      y: startCoords.y - evt.clientY
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
     };
 
     startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
     };
 
     setup.style.top = (setup.offsetTop - shift.y) + 'px';
@@ -160,24 +153,24 @@ var onDialogMousedown = function (evt) {
 
   // Обработчик события mouseup. Отменяет действие по умолчанию. Снимает обработчики mousemove, mouseup.
   // Если есть перемещение курсора, то вешает обработчик клика onSetupUserPicClick на элемент dialog.
-  var onDocumentMouseup = function (evt) {
-    evt.preventDefault();
+  var onDocumentMouseup = function (upEvt) {
+    upEvt.preventDefault();
     document.removeEventListener('mousemove', onDocumentMousemove);
     document.removeEventListener('mouseup', onDocumentMouseup);
 
     if (dragged) {
     // Обработчик события клика по элементу .setup-user-pic
     // Отменяет действие по умолчанию - открытие окна загрузки файла. Убирает обработчик клика по элементу dialog.
-    var onSetupUserPicClick = function (evt) {
-      evt.preventDefault();
-      dialog.removeEventListener('click', onSetupUserPicClick);
-    };
-    dialog.addEventListener('click', onSetupUserPicClick);
-  }
-};
+      var onSetupUserPicClick = function (clickEvt) {
+        clickEvt.preventDefault();
+        dialog.removeEventListener('click', onSetupUserPicClick);
+      };
+      dialog.addEventListener('click', onSetupUserPicClick);
+    }
+  };
 
-document.addEventListener('mousemove', onDocumentMousemove);
-document.addEventListener('mouseup', onDocumentMouseup);
+  document.addEventListener('mousemove', onDocumentMousemove);
+  document.addEventListener('mouseup', onDocumentMouseup);
 };
 
 // ******************************Объявления функций**************************************

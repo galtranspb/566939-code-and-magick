@@ -23,7 +23,6 @@ var inputCoatColor = setup.querySelector('input[name="coat-color"]');
 var inputEyesColor = setup.querySelector('input[name="eyes-color"]');
 var inputFireballColor = setup.querySelector('input[name="fireball-color"]');
 var setupWizardForm = document.querySelector('.setup-wizard-form');
-
 var dialog = setup.querySelector('.setup-user-pic');
 
 // *****************************************Определения функций******************************************
@@ -137,9 +136,19 @@ var onDialogMousedown = function (evt) {
     moveEvt.preventDefault();
     dragged = true;
 
+    // Принимает коорд маркера, мыши, мин и макс значание интервала.
+    // Если курсор мыши выходит за указанный интервал, то возвращает 0 (т.е. перемещение = 0)
+    var getLimitedPinMovement = function (startCoord, mouseCoord, lessThan, moreThan) {
+      if (mouseCoord < lessThan || mouseCoord > moreThan) {
+        return 0;
+      } else {
+        return startCoord - mouseCoord;
+      }
+    };
+
     var shift = {
-      x: startCoords.x - moveEvt.clientX,
-      y: startCoords.y - moveEvt.clientY
+      x: getLimitedPinMovement(startCoords.x, moveEvt.clientX, 70, 500),
+      y: getLimitedPinMovement(startCoords.y, moveEvt.clientY, 50, 100)
     };
 
     startCoords = {

@@ -24,13 +24,7 @@ var inputEyesColor = setup.querySelector('input[name="eyes-color"]');
 var inputFireballColor = setup.querySelector('input[name="fireball-color"]');
 var setupWizardForm = document.querySelector('.setup-wizard-form');
 
-// var dialog = setup.querySelector('.upload');
 var dialog = setup.querySelector('.setup-user-pic');
-var startCoords = {
-  x: setup.offsetTop,
-  y: setup.offsetLeft
-};
-var dragged = false;
 
 // *****************************************Определения функций******************************************
 
@@ -127,57 +121,63 @@ var onSetupWizardFormClick = function (evt) {
 
 // *****************************задание 5*******************************************
 
-// Принимает событие mousemove.
-// Определяет перемещение мыши по Х/У и устанавливает их в свойство стиля соответственно left/top элемента setup.
-var onDocumentMousemove = function (evt) {
-  evt.preventDefault();
-  dragged = true;
 
-  var shift = {
-    x: startCoords.x - evt.clientX,
-    y: startCoords.y - evt.clientY
-  };
 
-  startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
 
-  setup.style.top = (setup.offsetTop - shift.y) + 'px';
-  setup.style.left = (setup.offsetLeft - shift.x) + 'px';
-};
 
-// Обработчик события клика по элементу .setup-user-pic
-// Отменяет действие по умолчанию - открытие окна загрузки файла. Убирает обработчик клика по элементу dialog.
-var onSetupUserPicClick = function (evt) {
-  evt.preventDefault();
-  dialog.removeEventListener('click', onSetupUserPicClick);
-};
 
-// Обработчик события mouseup. Отменяет действие по умолчанию. Снимает обработчики mousemove, mouseup.
-// Если есть перемещение курсора, то вешает обработчик клика onSetupUserPicClick на элемент dialog.
-var onDocumentMouseup = function (evt) {
-  evt.preventDefault();
-  document.removeEventListener('mousemove', onDocumentMousemove);
-  document.removeEventListener('mouseup', onDocumentMouseup);
-
-  if (dragged) {
-    dialog.addEventListener('click', onSetupUserPicClick);
-  }
-};
 
 // Обработчик события mousedown.
 // Отменяет действие по умолчанию, указывает стартовые координаты, добалвяет на document обработчики onMouseMove и onMouseUp.
 var onDialogMousedown = function (evt) {
   evt.preventDefault();
 
-  startCoords = {
+  var startCoords = {
     x: evt.clientX,
     y: evt.clientY
   };
+  var dragged = false;
 
-  document.addEventListener('mousemove', onDocumentMousemove);
-  document.addEventListener('mouseup', onDocumentMouseup);
+  // Принимает событие mousemove.
+  // Определяет перемещение мыши по Х/У и устанавливает их в свойство стиля соответственно left/top элемента setup.
+  var onDocumentMousemove = function (evt) {
+    evt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - evt.clientX,
+      y: startCoords.y - evt.clientY
+    };
+
+    startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    setup.style.top = (setup.offsetTop - shift.y) + 'px';
+    setup.style.left = (setup.offsetLeft - shift.x) + 'px';
+  };
+
+  // Обработчик события mouseup. Отменяет действие по умолчанию. Снимает обработчики mousemove, mouseup.
+  // Если есть перемещение курсора, то вешает обработчик клика onSetupUserPicClick на элемент dialog.
+  var onDocumentMouseup = function (evt) {
+    evt.preventDefault();
+    document.removeEventListener('mousemove', onDocumentMousemove);
+    document.removeEventListener('mouseup', onDocumentMouseup);
+
+    if (dragged) {
+    // Обработчик события клика по элементу .setup-user-pic
+    // Отменяет действие по умолчанию - открытие окна загрузки файла. Убирает обработчик клика по элементу dialog.
+    var onSetupUserPicClick = function (evt) {
+      evt.preventDefault();
+      dialog.removeEventListener('click', onSetupUserPicClick);
+    };
+    dialog.addEventListener('click', onSetupUserPicClick);
+  }
+};
+
+document.addEventListener('mousemove', onDocumentMousemove);
+document.addEventListener('mouseup', onDocumentMouseup);
 };
 
 // ******************************Объявления функций**************************************

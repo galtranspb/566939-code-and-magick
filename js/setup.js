@@ -23,7 +23,9 @@ var inputCoatColor = setup.querySelector('input[name="coat-color"]');
 var inputEyesColor = setup.querySelector('input[name="eyes-color"]');
 var inputFireballColor = setup.querySelector('input[name="fireball-color"]');
 var setupWizardForm = document.querySelector('.setup-wizard-form');
+var dialog = setup.querySelector('.setup-user-pic');
 
+// *****************************************Определения функций******************************************
 
 // Возвращает случайное целое число из диапозона min (включительно) и max (не включая max);
 var getRandomIntByRange = function (min, max) {
@@ -69,13 +71,18 @@ var renderWizard = function (wizard) {
 // Убирает класс hidden у объекта setup и добавляет обработчик собития keydown на объект документ.
 var openPopup = function () {
   setup.classList.remove('hidden');
+  setup.querySelector('.setup-similar').classList.remove('hidden');
+  dialog.style.zIndex = 3;
   document.addEventListener('keydown', onPopupEscPress);
 };
 
 // Добаляет класс hidden объекту setup и убирает обработчик события keydown у объекта document.
 var closePopup = function () {
   setup.classList.add('hidden');
+  setup.querySelector('.setup-similar').classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
+  setup.style.top = '';
+  setup.style.left = '';
 };
 
 // Принимает событие event. Если нажата клавиша ESC, то запускает функцию closePopup.
@@ -111,6 +118,76 @@ var onSetupWizardFormClick = function (evt) {
   }
 };
 
+// *****************************задание 5*******************************************
+// Обработчик события mousedown.
+// Отменяет действие по умолчанию, указывает стартовые координаты, добалвяет на document обработчики onMouseMove и onMouseUp.
+var onDialogMousedown = function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+  var dragged = false;
+
+  // Принимает событие mousemove.
+  // Определяет перемещение мыши по Х/У и устанавливает их в свойство стиля соответственно left/top элемента setup.
+  var onDocumentMousemove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    // Принимает коорд маркера, мыши, мин и макс значание интервала.
+    // Если курсор мыши выходит за указанный интервал, то возвращает 0 (т.е. перемещение = 0)
+    var shift = {
+      x: 0,
+      y: 0
+    };
+
+    if (moveEvt.pageX < 50 || moveEvt.pageX + setup.offsetWidth > 1300) {
+      shift.x = 0;
+    } else {
+      shift.x = startCoords.x - moveEvt.clientX;
+    }
+
+    if (moveEvt.pageY < 20 || moveEvt.pageY + setup.offsetHeight > 1000) {
+      shift.y = 0;
+    } else {
+      shift.y = startCoords.y - moveEvt.clientY;
+    }
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    setup.style.top = (setup.offsetTop - shift.y) + 'px';
+    setup.style.left = (setup.offsetLeft - shift.x) + 'px';
+  };
+
+  // Обработчик события mouseup. Отменяет действие по умолчанию. Снимает обработчики mousemove, mouseup.
+  // Если есть перемещение курсора, то вешает обработчик клика onSetupUserPicClick на элемент dialog.
+  var onDocumentMouseup = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onDocumentMousemove);
+    document.removeEventListener('mouseup', onDocumentMouseup);
+
+    if (dragged) {
+    // Обработчик события клика по элементу .setup-user-pic
+    // Отменяет действие по умолчанию - открытие окна загрузки файла. Убирает обработчик клика по элементу dialog.
+      var onSetupUserPicClick = function (clickEvt) {
+        clickEvt.preventDefault();
+        dialog.removeEventListener('click', onSetupUserPicClick);
+      };
+      dialog.addEventListener('click', onSetupUserPicClick);
+    }
+  };
+
+  document.addEventListener('mousemove', onDocumentMousemove);
+  document.addEventListener('mouseup', onDocumentMouseup);
+};
+
+// ******************************Объявления функций**************************************
+
 var wizards = createArreyOfObject(NUMBER_OF_WIZARDS);
 
 var fragment = document.createDocumentFragment();
@@ -118,8 +195,6 @@ for (var i = 0; i < wizards.length; i++) {
   fragment.appendChild(renderWizard(wizards[i]));
 }
 similarListElement.appendChild(fragment);
-
-// setup.querySelector('.setup-similar').classList.remove('hidden');
 
 setupOpen.addEventListener('click', function () {
   openPopup();
@@ -142,3 +217,5 @@ setupClose.addEventListener('keydown', function (evt) {
 });
 
 setupWizardForm.addEventListener('click', onSetupWizardFormClick);
+
+dialog.addEventListener('mousedown', onDialogMousedown);

@@ -138,18 +138,22 @@ var onDialogMousedown = function (evt) {
 
     // Принимает коорд маркера, мыши, мин и макс значание интервала.
     // Если курсор мыши выходит за указанный интервал, то возвращает 0 (т.е. перемещение = 0)
-    var getLimitedPinMovement = function (startCoord, mouseCoord, lessThan, moreThan) {
-      if (mouseCoord < lessThan || mouseCoord > moreThan) {
-        return 0;
-      } else {
-        return startCoord - mouseCoord;
-      }
+    var shift = {
+      x: 0,
+      y: 0
     };
 
-    var shift = {
-      x: getLimitedPinMovement(startCoords.x, moveEvt.clientX, 70, 500),
-      y: getLimitedPinMovement(startCoords.y, moveEvt.clientY, 50, 100)
-    };
+    if (moveEvt.pageX < 50 || moveEvt.pageX + setup.offsetWidth > 1300) {
+      shift.x = 0;
+    } else {
+      shift.x = startCoords.x - moveEvt.clientX;
+    }
+
+    if (moveEvt.pageY < 20 || moveEvt.pageY + setup.offsetHeight > 1000) {
+      shift.y = 0;
+    } else {
+      shift.y = startCoords.y - moveEvt.clientY;
+    }
 
     startCoords = {
       x: moveEvt.clientX,

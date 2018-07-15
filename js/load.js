@@ -2,18 +2,20 @@
 
 (function () {
 
-  var URL = 'https://js.dump.academy/code-and-magick';
+  var URL = 'https://js.dump.academy/code-and-magick/data';
 
-  window.save = function (data, onSuccess) {
+  window.load = function (onSuccess, _onError) {
     var xhr = new XMLHttpRequest();
+
     xhr.responseType = 'json';
+
+    xhr.open('GET', URL);
 
     xhr.addEventListener('load', function () {
       onSuccess(xhr.response);
     });
 
-    xhr.open('POST', URL);
-    xhr.send(data);
+    xhr.send();
   };
 
 })();

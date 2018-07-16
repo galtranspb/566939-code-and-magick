@@ -40,6 +40,6 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  window.load(onSuccessLoad, onErrorLoad);
+  window.backend.load(onSuccessLoad, onErrorLoad);
 
 })();

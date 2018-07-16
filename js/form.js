@@ -42,7 +42,7 @@
   };
 
   var onFormSubmit = function (evt) {
-    window.save(new FormData(form), function (_response) {
+    window.backend.save(new FormData(form), function (_response) {
       window.utility.setup.classList.add('hidden');
     });
     evt.preventDefault();

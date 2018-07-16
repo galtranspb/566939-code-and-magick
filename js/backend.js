@@ -2,11 +2,8 @@
 
 (function () {
 
-  // backend.load запрос на загрузку волшебников
-  var load = function (onSuccess, onError) {
-    var URL = 'https://js.dump.academy/code-and-magick/data';
-    var xhr = new XMLHttpRequest();
 
+  var createRequest = function (onSuccess, onError, xhr) {
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
@@ -25,22 +22,22 @@
     });
 
     xhr.timeout = 10000;
+  };
 
+  // backend.load запрос на загрузку волшебников
+  var load = function (onSuccess, onError) {
+    var URL = 'https://js.dump.academy/code-and-magick/data';
+    var xhr = new XMLHttpRequest();
+    createRequest(onSuccess, onError, xhr);
     xhr.open('GET', URL);
     xhr.send();
   };
 
   // backend.save запрос на сохранение формы
-  var save = function (data, onSuccess, _onError) {
+  var save = function (data, onSuccess, onError) {
     var URL = 'https://js.dump.academy/code-and-magick';
     var xhr = new XMLHttpRequest();
-
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', function () {
-      onSuccess(xhr.response);
-    });
-
+    createRequest(onSuccess, onError, xhr);
     xhr.open('POST', URL);
     xhr.send(data);
   };

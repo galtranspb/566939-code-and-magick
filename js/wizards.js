@@ -18,6 +18,8 @@
     return wizardElement;
   };
 
+  // Обработчик успешно загрузки данных.
+  // Отрисовывает 4 случайных волшебника из полученного массива волшебников.
   var onSuccessLoad = function (wizards) {
     var fragment = document.createDocumentFragment();
 
@@ -28,6 +30,8 @@
     similarListElement.appendChild(fragment);
   };
 
+  // Обработчик ошибки, при загрузке данных.
+  // Выводит соответсвующее ошибке сообщение.
   var onErrorLoad = function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';

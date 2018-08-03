@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-
-
   var createRequest = function (onSuccess, onError, xhr) {
     xhr.responseType = 'json';
 

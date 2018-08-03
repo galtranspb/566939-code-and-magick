@@ -6,8 +6,9 @@
   var similar = document.querySelector('.setup-similar');
   var similarList = document.querySelector('.setup-similar-list');
 
-  // Принимает массив объектов wizard.
-  // Создает копию разметки из шаблона similarWizardTemplate. Определяет текстовое содержимое и
+  // Принимает объект wizard.
+  // Создает копию разметки из шаблона similarWizardTemplate.
+  // Определяет текстовое содержимое и стили элементов в соответсвии с объектом wizard.
   var renderWizard = function (wizard) {
     var wizardElement = similarWizardTemplate.cloneNode(true);
     wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
@@ -16,6 +17,9 @@
     return wizardElement;
   };
 
+  // Принимает массив волшебников data.
+  // Отрисовывает на странице не более четырех волшебников.
+  // У блока с похожими волшебниками similar убирает класс hidden.
   window.render = function (data) {
     var takeNumber = data.length > 4 ? 4 : data.length;
     similarList.innerHTML = '';

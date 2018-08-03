@@ -18,6 +18,17 @@
   var inputEyesColor = document.querySelector('input[name="eyes-color"]');
   var inputFireballColor = document.querySelector('input[name="fireball-color"]');
 
+  // Возвращает случайное целое число из диапозона min (включительно) и max (не включая max);
+  var getRandomIntByRange = function (min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  };
+
+  // Возвращает случайный элемент массива. Выборка берётся из входящего массива arr.
+  var getRandomArrayItem = function (arr) {
+    return arr[getRandomIntByRange(0, arr.length)];
+  };
+
+  // Сортирует похожих волшебников и обновляет их на странице.
   var updateWizards = function () {
     var sameCoatAndEyesWizards = wizards.filter(function (it) {
       return it.colorCoat === coatColor && it.colorEyes === eyesColor;
@@ -42,32 +53,40 @@
     window.render(uniqueWizards);
   };
 
-  // Принимает объект 1, массив, и объект 2.
-  // Устанваливает объекту 1 цвет заливки случайным образом из массива arr и передаёт это значение в свойсвто value объекта 2.
+  // Принимает массив - возможные варианты цвета плаща.
+  // Устанавливает случайный цвет плаща из входящего массива.
+  // Определяет этот цвет на волшебнике, в значение поля ввода цвета плаща, в переменную coatColor и
+  // запускает функцию обновления похожих волшебников.
   var onWizardCoatElementClick = function (arr) {
-    var newColor = window.utility.getRandomArrayItem(arr);
+    var newColor = getRandomArrayItem(arr);
     wizardCoatElement.style.fill = newColor;
     inputCoatColor.value = newColor;
     coatColor = newColor;
     updateWizards();
   };
 
+  // Принимает массив - возможные варианты цвета глаз.
+  // Устанавливает случайный цвет глаз из входящего массива.
+  // Определяет этот цвет на волшебнике, в значение поля ввода цвета глаз, в переменную eyesColor и
+  // запускает функцию обновления похожих волшебников.
   var onWizardEyesElementClick = function (arr) {
-    var newColor = window.utility.getRandomArrayItem(arr);
+    var newColor = getRandomArrayItem(arr);
     wizardEyesElement.style.fill = newColor;
     inputEyesColor.value = newColor;
-    coatColor = newColor;
+    eyesColor = newColor;
     updateWizards();
   };
 
+  // Принимает массив - возможные варианты цвета файерболла.
   // Устанавливает цвет файрбола случайным образом из массива arr.
+  // Определяет этот цвет фоновым цветом файерболла волшебника и в значение поля ввода файерболла.
   var onWizardFireballElementClick = function (arr) {
-    wizardFireballElement.style.backgroundColor = window.utility.getRandomArrayItem(arr);
+    wizardFireballElement.style.backgroundColor = getRandomArrayItem(arr);
     inputFireballColor.backgroundColor = wizardFireballElement.style.backgroundColor;
   };
 
-  // Обработчик событий клика на форме .Setup-Wizard-Form. Запускает функции из предложеных вариантов, в зависимости
-  // от того, на каком элементе произошёл клик.
+  // Обработчик событий клика на форме setup-wizard-form. Через делегирование запускает обработчики клика
+  // на элементах волшебника: плащ, глаза, фйерболл.
   var onFormClick = function (evt) {
     switch (evt.target) {
       case wizardCoatElement:
@@ -82,14 +101,17 @@
     }
   };
 
+  // Обработчик отправки формы.
+  // Отправляет данные(выбранные параметры волшебника) на сервер. Отменяет отправку формы.
   var onFormSubmit = function (evt) {
     window.backend.save(new FormData(form), function () {
-      window.utility.setup.classList.add('hidden');
+      window.setup.setup.classList.add('hidden');
     });
     evt.preventDefault();
   };
 
   // Обработчик успешно загрузки данных.
+  // Принимает массив волшебников. Обновляет похожих волшебников.
   var onSuccessLoad = function (data) {
     wizards = data;
     updateWizards();

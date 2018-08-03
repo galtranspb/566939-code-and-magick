@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  // Принимает функции успешного выполнения запроса, ошибки запроса и
+  // обект XMLHttpRequest.
   var createRequest = function (onSuccess, onError, xhr) {
     xhr.responseType = 'json';
 

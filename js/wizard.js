@@ -6,10 +6,6 @@
   var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
-  var coatColor;
-  var eyesColor;
-  var wizards = [];
-
   var form = document.querySelector('.setup-wizard-form');
   var wizardCoatElement = document.querySelector('.wizard-coat');
   var wizardEyesElement = document.querySelector('.wizard-eyes');
@@ -17,6 +13,11 @@
   var inputCoatColor = document.querySelector('input[name="coat-color"]');
   var inputEyesColor = document.querySelector('input[name="eyes-color"]');
   var inputFireballColor = document.querySelector('input[name="fireball-color"]');
+
+  window.wizard = {
+    onEyesChange: function (_color) {},
+    onCoatChange: function (_color) {}
+  };
 
   // Возвращает случайное целое число из диапозона min (включительно) и max (не включая max);
   var getRandomIntByRange = function (min, max) {
@@ -28,31 +29,6 @@
     return arr[getRandomIntByRange(0, arr.length)];
   };
 
-  // Сортирует похожих волшебников и обновляет их на странице.
-  var updateWizards = function () {
-    var sameCoatAndEyesWizards = wizards.filter(function (it) {
-      return it.colorCoat === coatColor && it.colorEyes === eyesColor;
-    });
-
-    var sameCoatWizards = wizards.filter(function (it) {
-      return it.colorCoat === coatColor;
-    });
-    var sameEyesWizards = wizards.filter(function (it) {
-      return it.colorEyes === eyesColor;
-    });
-
-    var filteredWizards = sameCoatAndEyesWizards;
-    filteredWizards = filteredWizards.concat(sameCoatWizards);
-    filteredWizards = filteredWizards.concat(sameEyesWizards);
-    filteredWizards = filteredWizards.concat(wizards);
-
-    var uniqueWizards = filteredWizards.filter(function (it, i) {
-      return filteredWizards.indexOf(it) === i;
-    });
-
-    window.render(uniqueWizards);
-  };
-
   // Принимает массив - возможные варианты цвета плаща.
   // Устанавливает случайный цвет плаща из входящего массива.
   // Определяет этот цвет на волшебнике, в значение поля ввода цвета плаща, в переменную coatColor и
@@ -61,8 +37,7 @@
     var newColor = getRandomArrayItem(arr);
     wizardCoatElement.style.fill = newColor;
     inputCoatColor.value = newColor;
-    coatColor = newColor;
-    updateWizards();
+    window.wizard.onCoatChange(newColor);
   };
 
   // Принимает массив - возможные варианты цвета глаз.
@@ -73,8 +48,7 @@
     var newColor = getRandomArrayItem(arr);
     wizardEyesElement.style.fill = newColor;
     inputEyesColor.value = newColor;
-    eyesColor = newColor;
-    updateWizards();
+    window.wizard.onEyesChange(newColor);
   };
 
   // Принимает массив - возможные варианты цвета файерболла.
@@ -110,29 +84,9 @@
     evt.preventDefault();
   };
 
-  // Обработчик успешно загрузки данных.
-  // Принимает массив волшебников. Обновляет похожих волшебников.
-  var onSuccessLoad = function (data) {
-    wizards = data;
-    updateWizards();
-  };
-
-  // Обработчик ошибки, при загрузке данных.
-  // Выводит соответсвующее ошибке сообщение.
-  var onErrorLoad = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
-
-  window.backend.load(onSuccessLoad, onErrorLoad);
   form.addEventListener('click', onFormClick);
   form.addEventListener('submit', onFormSubmit);
+
+  return window.wizard;
 
 })();

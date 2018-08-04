@@ -7,16 +7,16 @@
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
   var form = document.querySelector('.setup-wizard-form');
-  var wizardCoatElement = document.querySelector('.wizard-coat');
-  var wizardEyesElement = document.querySelector('.wizard-eyes');
-  var wizardFireballElement = document.querySelector('.setup-fireball');
-  var inputCoatColor = document.querySelector('input[name="coat-color"]');
-  var inputEyesColor = document.querySelector('input[name="eyes-color"]');
-  var inputFireballColor = document.querySelector('input[name="fireball-color"]');
+  var wizardCoatElement = form.querySelector('.wizard-coat');
+  var wizardEyesElement = form.querySelector('.wizard-eyes');
+  var wizardFireballElement = form.querySelector('.setup-fireball');
+  var inputCoatColor = form.querySelector('input[name="coat-color"]');
+  var inputEyesColor = form.querySelector('input[name="eyes-color"]');
+  var inputFireballColor = form.querySelector('input[name="fireball-color"]');
 
   window.wizard = {
-    onEyesChange: function (_color) {},
-    onCoatChange: function (_color) {}
+    onEyesChange: function () {},
+    onCoatChange: function () {}
   };
 
   // Возвращает случайное целое число из диапозона min (включительно) и max (не включая max);
@@ -31,8 +31,8 @@
 
   // Принимает массив - возможные варианты цвета плаща.
   // Устанавливает случайный цвет плаща из входящего массива.
-  // Определяет этот цвет на волшебнике, в значение поля ввода цвета плаща, в переменную coatColor и
-  // запускает функцию обновления похожих волшебников.
+  // Определяет этот цвет на волшебнике, в значение поля ввода цвета плаща и
+  // запускает обраюотчик события change на изменение цвета плаща.
   var onWizardCoatElementClick = function (arr) {
     var newColor = getRandomArrayItem(arr);
     wizardCoatElement.style.fill = newColor;
@@ -42,8 +42,8 @@
 
   // Принимает массив - возможные варианты цвета глаз.
   // Устанавливает случайный цвет глаз из входящего массива.
-  // Определяет этот цвет на волшебнике, в значение поля ввода цвета глаз, в переменную eyesColor и
-  // запускает функцию обновления похожих волшебников.
+  // Определяет этот цвет на волшебнике, в значение поля ввода цвета глаз и
+  // запускает обработчик события change на изменение цвета глаз.
   var onWizardEyesElementClick = function (arr) {
     var newColor = getRandomArrayItem(arr);
     wizardEyesElement.style.fill = newColor;

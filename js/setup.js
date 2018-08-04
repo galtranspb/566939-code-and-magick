@@ -8,6 +8,7 @@
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = setup.querySelector('.setup-close');
   var setupUserName = setup.querySelector('.setup-user-name');
+  var preview = document.querySelector('.setup-user-pic');
 
   // Убирает класс hidden у объекта setup, добавляет обработчик собития keydown на объект документ и
   // устанавливает z-index 3.
@@ -26,6 +27,7 @@
     document.removeEventListener('keydown', onPopupEscPress);
     setup.style.top = '';
     setup.style.left = '';
+    preview.src = './img/user-1.jpg';
   };
 
   // Принимает событие event. Если нажата клавиша ESC и поле ввода имени не в фокусе,

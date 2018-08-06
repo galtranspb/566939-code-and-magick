@@ -7,7 +7,12 @@
   var preview = document.querySelector('.setup-user-pic');
   var setupOpenIcon = document.querySelector('.setup-open-icon');
 
-  fileChooser.addEventListener('change', function () {
+  var onFileChooserLoad = function (evt) {
+    preview.src = evt.target.result;
+    setupOpenIcon.src = evt.target.result;
+  };
+
+  var onFileChooserChange = function () {
     var file = fileChooser.files[0];
     var fileName = file.name.toLowerCase();
 
@@ -17,14 +22,11 @@
 
     if (matches) {
       var reader = new FileReader();
-
-      reader.addEventListener('load', function () {
-        preview.src = reader.result;
-        setupOpenIcon.src = reader.result;
-      });
-
+      reader.addEventListener('load', onFileChooserLoad);
       reader.readAsDataURL(file);
     }
-  });
+  };
+
+  fileChooser.addEventListener('change', onFileChooserChange);
 
 })();

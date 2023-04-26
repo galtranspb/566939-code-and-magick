@@ -1,1 +1,1 @@
-https://anatolysokolov.github.io/566939-code-and-magick/
+https://galtranspb.github.io/566939-code-and-magick/
